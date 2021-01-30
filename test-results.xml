@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.494" tests="1" failures="1">
+  <testsuite name="Root Suite" timestamp="2021-01-30T16:54:18" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Tree panel (TreeTracker)" timestamp="2021-01-30T16:54:18" tests="1" file="/Users/trunekm/Development/treetracker-e2e/tests/treeTrackerTreeVerificationTest.js" failures="1" time="0.494">
+    <testcase name="Tree panel (TreeTracker) Verify user panel - tree exists and is verified successfully @test" time="0.494" classname="Verify user panel - tree exists and is verified successfully @test">
+      <failure message="Response status does not match!: expected 200 to equal 201" type="AssertionError"><![CDATA[AssertionError: Response status does not match!: expected 200 to equal 201
+    at MyHelper.assertEquals (helpers/customHelper/myHelper.js:35:16)
+    at Step.run (node_modules/codeceptjs/lib/step.js:66:47)
+    at /Users/trunekm/Development/treetracker-e2e/node_modules/codeceptjs/lib/actor.js:117:23
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

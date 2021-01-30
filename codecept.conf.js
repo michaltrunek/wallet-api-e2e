@@ -1,74 +1,77 @@
+let reporterVerbose = process.env.reporterVerbose;
+let reporterSteps = process.env.reporterSteps;
+let reporterDebug = process.env.reporterDebug;
+const defaultHeaders = process.env.defaultHeaders;
 let testFilter = process.env.testFilter;
-let showScreen = process.env.npm_package_config_showscreen;
 let executors = process.env.workers;
-const width = 1280;
-const height = 920;
 
 /**
  * Setting Env Variables default
  */
+let defaultHeadersPreset = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+};
 executors = executors !== undefined ? executors : 5;
 
 if (testFilter === undefined) testFilter = './tests/*Test.js';
+reporterVerbose = !(reporterVerbose === undefined || reporterVerbose === 'false');
+reporterSteps = reporterSteps === undefined || reporterSteps === 'true';
+reporterDebug = !(reporterDebug === undefined || reporterDebug === 'false');
+defaultHeadersPreset = (defaultHeaders === 'true' || defaultHeaders === undefined) ? defaultHeadersPreset : {};
 
 exports.config = {
     tests: testFilter,
-    timeout: 30000,
     output: './output',
-
     helpers: {
         REST: {
             resetHeaders: true,
-            timeout: 15000
-        },
-        Puppeteer: {
-            restart: true,
-            fullPageScreenshots: true,
-            uniqueScreenshotNames: false,
-            show: showScreen === 'true',
-            waitForTimeout: 35000,
-            getPageTimeout: 60000,
-            windowSize: `${width}x${height}`,
-            chrome: {
-                args: ['--no-sandbox', '--lang=en', `--window-size=${width},${height}`]
-            }
+            timeout: 60000,
+            defaultHeaders: defaultHeadersPreset
         },
         MyHelper: {
             require: './helpers/customHelper/myHelper.js'
         }
     },
     include: {
-        I: './steps_file.js',
-
-        // Sports mobile pages & components
-
-        // steps
-        beforeSteps: './helpers/steps/beforeSteps.js',
-
-        // pages
-        betDetails: './helpers/pages/betDetails.js',
-
         // components
-        userPanelComponent: './helpers/components/userPanel.js',
-        noDataComponent: './helpers/components/noData.js'
+        treeDetailsApi: './helpers/models/treeDetailsApi.js',
     },
     multiple: {
         parallel: {
             chunks: executors
         }
     },
-    name: 'treetracker-e2e-automation',
-    plugins: {
-        autoDelay: {
-            enabled: true,
-            delayBefore: 300,
-            delayAfter: 500,
-            methods: ["selectOption", "click", "appendField"]
-        },
-        allure: {
-            enabled: true
-        },
-    }
+    mocha: {
+        "reporterOptions": {
+            "mochaFile": "output/result.xml"
+        }
+    },
+    /*mocha: {
+        reporterOptions: {
+            "treetracker-api": {
+                stdout: "-",
+                options: {
+                    reportDir: './output',
+                    verbose: reporterVerbose,
+                    steps: reporterSteps,
+                    debug: reporterDebug
+                }
+            },
+            "mocha-junit-reporter": {
+                stdout: "-",
+                options: {
+                    reportDir: './output',
+                    mochaFile: "output/result.xml",
+                    rootSuiteTitle: 'treetracker-api',
+                    testsuitesTitle: 'Api Tests',
+                    includePending: true,
+                    toConsole: false
+                }
+            }
+        }
+    },*/
+    name: 'treetracker-e2e-api-automation'
 };
 
 
