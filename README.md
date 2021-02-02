@@ -1,5 +1,5 @@
 # Scope
-The scope of this repository is to host all treeTracker e2e tests.
+The scope of this repository is to host all wallet API e2e tests.
 
 #Requirements
 
