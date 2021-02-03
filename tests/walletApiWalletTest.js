@@ -23,7 +23,7 @@ Scenario('Wallets - Verify all props received from all wallets managed by logged
     I.assertEquals(response.status, 200, 'Response status does not match!');
 
     wallets.forEach(function (wallet) {
-        wallet.hasOwnProperty('id');
+        I.assertEquals(wallet.hasOwnProperty('id'), true, 'The ID property does not exist!'); // todo: update all the assert steps
         wallet.hasOwnProperty('type');
         wallet.hasOwnProperty('uuid');
         wallet.hasOwnProperty('name');
