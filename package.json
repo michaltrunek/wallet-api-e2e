@@ -6,7 +6,7 @@
     "report": "allure serve output",
     "build-docker": "docker build -f CI/docker/Dockerfile -t codeceptjs .",
     "docker": "docker run -v /var/run/docker.sock:/var/run/docker.sock -e testFilter=$npm_package_config_filter -e environment=$npm_package_config_env -e GREP=$npm_package_config_grep codeceptjs",
-    "test": "environment=$npm_package_config_env codeceptjs run --reporter mocha-junit-reporter --grep=$npm_package_config_grep"
+    "test": "environment=$npm_package_config_env codeceptjs run --grep=$npm_package_config_grep --steps"
   },
   "config": {
     "filter": "./tests/*Test.js",
