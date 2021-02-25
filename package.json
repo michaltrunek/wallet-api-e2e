@@ -2,7 +2,6 @@
   "name": "treetracker-e2e-automation",
   "version": "0.0.1",
   "scripts": {
-    "pre-commit-check": "eslint tests",
     "test": "mocha $npm_package_config_filter"
   },
   "config": {
@@ -10,20 +9,15 @@
     "env": "testsystem",
     "grep": "@wallet"
   },
-  "pre-commit": [
-    "pre-commit-check"
-  ],
   "devDependencies": {
     "assert": "1.5.0",
     "chai": "^4.2.0",
     "chai-as-promised": "7.1.1",
-    "eslint": "^7.13.0",
     "faker": "^5.3.1",
     "http-status-codes": "1.4.0",
     "mocha": "^8.2.1",
     "parse-function": "5.6.10",
     "parse-json": "4.0.0",
-    "pre-commit": "^1.2.2",
     "rosie": "^2.0.1",
     "set-cookie-parser": "2.4.6",
     "sync-request": "6.1.0",
