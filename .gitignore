@@ -25,3 +25,5 @@ test/report/*
 output
 
 .java-version
+
+.env

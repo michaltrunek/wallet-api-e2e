@@ -20,3 +20,9 @@ The scope of this repository is to host all wallet API e2e tests.
 ```npm run test``` - run tests locally with verbose option on
 
 
+TODO:
+* In package.json: remove NODE_TLS_REJECT_UNAUTHORIZED='0' and use valid ssl connection instead (not self signed)
+* call seed.clear() function after all tests
+
+
+
