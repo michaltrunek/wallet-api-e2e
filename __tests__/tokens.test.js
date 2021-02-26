@@ -16,7 +16,7 @@ describe("Tokens (Wallet API)", function () {
         const response = await request
             .get(`/tokens/${tokenUid}`)
             .set('Authorization', `bearer ${bearerToken}`)
-            .set('TREETRACKER-API-KEY', apiKey);
+            .set('treetracker-api-key', apiKey);
 
         console.log(response.text);
         assert.equals(response.status, responseStatus.OK, 'Response status does not equal!');
