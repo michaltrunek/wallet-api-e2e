@@ -1,19 +1,13 @@
 /*
  * seed data to DB for testing
  */
-const pool = require("../server/database/database.js");
 const uuid = require("uuid");
-const log = require("loglevel");
-const assert = require("assert");
-const knex = require("knex")({
-  client: "pg",
-  //  debug: true,
-  connection: require("../config/config").connectionString,
-});
+const knex = require("../database/knex");
 
 const apiKey = "FORTESTFORTESTFORTESTFORTESTFORTEST";
+
 const wallet = {
-  id: 10,
+  id: uuid.v4(),
   name: "walletA",
   password: "test1234",
   passwordHash:
@@ -22,17 +16,20 @@ const wallet = {
   type: "p",
 };
 
-const tree = {
-  id: 999999,
+const capture = {
+  id: uuid.v4(),
+};
+
+const captureB = {
+  id: uuid.v4(),
 };
 
 const token = {
-  id: 9,
-  uuid: uuid.v4(),
+  id: uuid.v4(),
 };
 
 const walletB = {
-  id: 11,
+  id: uuid.v4(),
   name: "walletB",
   password: "test1234",
   passwordHash:
@@ -42,13 +39,19 @@ const walletB = {
 };
 
 const walletC = {
-  id: 12,
+  id: uuid.v4(),
   name: "walletC",
   password: "test1234",
   passwordHash:
     "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
   salt: "TnDe2LDPS7VaPD9GQWL3fhG4jk194nde",
   type: "p",
+};
+
+const tokenB = {
+  id: uuid.v4(),
+  capture_id: captureB.id,
+  wallet_id: walletC.id,
 };
 
 const storyOfThisSeed = `
@@ -59,20 +62,27 @@ const storyOfThisSeed = `
       wallet: ${wallet.wallet}
       password: ${wallet.password}
 
-    a tree: #${tree.id}
+    a capture: #${capture.id}
 
     a token: #${token.id}
-      tree: #${tree.id}
+      capture: #${capture.id}
       wallet: #${wallet.id}
-      uuid: ${token.uuid}
 
-    wallet #${wallet.id} planted a tree #${tree.id}, get a token #${token.id}
+    wallet #${wallet.id} planted a capture #${capture.id}, get a token #${
+  token.id
+}
 
     walletB: 
       ${JSON.stringify(walletB, undefined, 2)}
 
     walletC (walletC was managed by walletB:#{walletB.id}): 
       ${JSON.stringify(walletC, undefined, 2)}
+
+    Another token, belongs to walletC:
+      ${JSON.stringify(tokenB, undefined, 2)}
+
+    Another capture: #${captureB.id}
+
 
 `;
 console.debug(
@@ -82,9 +92,9 @@ console.debug(
 );
 
 async function seed() {
-  log.debug("seed api key");
+  console.log("seed api key");
   //TODO should use appropriate hash & salt to populate this table
-  await knex("wallets.api_key").insert({
+  await knex("api_key").insert({
     key: apiKey,
     tree_token_api_access: true,
     hash: "test",
@@ -93,7 +103,7 @@ async function seed() {
   });
 
   // wallet
-  await knex("wallets.wallet").insert({
+  await knex("wallet").insert({
     id: wallet.id,
     type: wallet.type,
     name: wallet.name,
@@ -102,7 +112,7 @@ async function seed() {
   });
 
   //walletB
-  await knex("wallets.wallet").insert({
+  await knex("wallet").insert({
     id: walletB.id,
     type: walletB.type,
     name: walletB.name,
@@ -111,7 +121,7 @@ async function seed() {
   });
 
   //walletC
-  await knex("wallets.wallet").insert({
+  await knex("wallet").insert({
     id: walletC.id,
     type: walletC.type,
     name: walletC.name,
@@ -120,75 +130,62 @@ async function seed() {
   });
 
   //relationships: 'walletB' manage 'walletC'
-  await knex("wallets.entity_trust").insert({
+  await knex("wallet_trust").insert({
     type: "manage",
-    actor_entity_id: walletB.id,
-    target_entity_id: walletC.id,
-    originator_entity_id: walletB.id,
+    actor_wallet_id: walletB.id,
+    target_wallet_id: walletC.id,
+    originator_wallet_id: walletB.id,
     request_type: "manage",
     state: "trusted",
   });
 
-  //entity
-  await knex("entity").insert({
-    id: wallet.id,
-    type: wallet.type,
-    name: wallet.name,
-    wallet: wallet.name,
-    password: wallet.passwordHash,
-    salt: wallet.salt,
-  });
-
-  //entity role
-  log.debug("insert role");
-  await knex("entity_role").insert([
-    {
-      entity_id: wallet.id,
-      role_name: "list_trees",
-      enabled: true,
-    },
-    {
-      entity_id: wallet.id,
-      role_name: "manage_accounts",
-      enabled: true,
-    },
-    {
-      entity_id: wallet.id,
-      role_name: "accounts",
-      enabled: true,
-    },
-  ]);
-
-  //tree
-  await knex("trees").insert({
-    id: tree.id,
-    time_created: new Date(),
-    time_updated: new Date(),
-  });
-
   // token
-  log.log("seed token");
-  await knex("wallets.token").insert({
+  console.log("seed token");
+  await knex("token").insert({
     id: token.id,
-    tree_id: tree.id,
-    entity_id: wallet.id,
-    uuid: token.uuid,
+    capture_id: capture.id,
+    wallet_id: wallet.id,
   });
+
+  await knex("token").insert(tokenB);
 }
 
 async function clear() {
-  log.debug("clear tables");
-  await knex("wallets.api_key").del();
-  await knex("wallets.transaction").del();
-  await knex("wallets.token").del();
-  await knex("trees").del();
-  await knex("wallets.wallet").del();
-  await knex("wallets.entity_trust").del();
-  await knex("entity_role").del();
-  await knex("entity").del();
-  await knex("wallets.entity_trust").del();
-  await knex("wallets.transfer").del();
-  await knex("wallets.entity_trust").del();
+  console.log("clearing db");
+
+  await knex("api_key").where("key", apiKey).del();
+
+  await knex("transaction").where("source_wallet_id", wallet.id).del();
+  await knex("transaction").where("source_wallet_id", walletB.id).del();
+  await knex("transaction").where("source_wallet_id", walletC.id).del();
+
+  await knex("token").where("id", token.id).del();
+  await knex("token").where("id", tokenB.id).del();
+
+  await knex("wallet").where("id", wallet.id).del();
+  await knex("wallet").where("id", walletB.id).del();
+  await knex("wallet").where("id", walletC.id).del();
+
+  await knex("wallet_trust").where("actor_wallet_id", wallet.id).del();
+  await knex("wallet_trust").where("actor_wallet_id", walletB.id).del();
+  await knex("wallet_trust").where("actor_wallet_id", walletC.id).del();
+
+  await knex("transfer").where("originator_wallet_id", walletC.id).del();
+  await knex("transfer").where("originator_wallet_id", walletC.id).del();
+  await knex("transfer").where("originator_wallet_id", walletC.id).del();
+
+  console.log("done clearing db");
 }
 
-module.exports = { seed, clear, apiKey, wallet, walletB, walletC, tree, token };
+module.exports = {
+  seed,
+  clear,
+  apiKey,
+  wallet,
+  walletB,
+  walletC,
+  capture,
+  token,
+  tokenB,
+  captureB,
+};
