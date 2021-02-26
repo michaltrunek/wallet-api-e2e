@@ -2,41 +2,25 @@
   "name": "treetracker-e2e-automation",
   "version": "0.0.1",
   "scripts": {
-    "pre-commit-check": "eslint tests",
-    "report": "allure serve output",
-    "build-docker": "docker build -f CI/docker/Dockerfile -t codeceptjs .",
-    "docker": "docker run -v /var/run/docker.sock:/var/run/docker.sock -e testFilter=$npm_package_config_filter -e environment=$npm_package_config_env -e GREP=$npm_package_config_grep codeceptjs",
-    "test": "environment=$npm_package_config_env codeceptjs run --grep=$npm_package_config_grep --steps"
+    "test": "mocha $npm_package_config_filter"
   },
   "config": {
-    "filter": "./tests/*Test.js",
+    "filter": "./__tests__/*.test.js",
     "env": "testsystem",
     "grep": "@wallet"
   },
-  "pre-commit": [
-    "pre-commit-check"
-  ],
   "devDependencies": {
     "assert": "1.5.0",
-    "axios": "0.21.0",
-    "casual": "1.6.2",
-    "chai": "4.2.0",
+    "chai": "^4.2.0",
     "chai-as-promised": "7.1.1",
-    "codeceptjs": "3.0.4",
-    "eslint": "^7.13.0",
-    "eslint-plugin-codeceptjs": "^1.3.0",
     "faker": "^5.3.1",
     "http-status-codes": "1.4.0",
-    "is-array-sorted": "^2.0.0",
-    "lodash": "4.17.19",
-    "mocha": "8.2.1",
-    "mocha-junit-reporter": "^1.23.2",
-    "mocha-multi": "1.1.3",
+    "mocha": "^8.2.1",
     "parse-function": "5.6.10",
     "parse-json": "4.0.0",
-    "pre-commit": "^1.2.2",
     "rosie": "^2.0.1",
     "set-cookie-parser": "2.4.6",
-    "sync-request": "6.1.0"
+    "sync-request": "6.1.0",
+    "supertest": "^6.1.3"
   }
 }
