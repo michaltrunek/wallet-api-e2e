@@ -1,12 +1,12 @@
 const seed = require("./seed");
 const { expect } = require("chai");
-const knex = require("../database/knex");
+const knex = require("./knex");
 
 describe("Seed data into DB", () => {
   let token;
 
   before(async () => {
-    await seed.clear();
+    //await seed.clear();
     //await seed.seed();
   });
 

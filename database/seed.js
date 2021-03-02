@@ -2,7 +2,7 @@
  * seed data to DB for testing
  */
 const uuid = require("uuid");
-const knex = require("../database/knex");
+const knex = require("./knex");
 
 const apiKey = "FORTESTFORTESTFORTESTFORTESTFORTEST";
 
