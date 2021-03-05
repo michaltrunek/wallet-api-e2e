@@ -50,7 +50,7 @@ describe("Wallet integration tests", () => {
   });
 
   // Authorization path
-  it(`[POST /auth] login with ${seed.wallet.name}`, (done) => {
+  /*it(`[POST /auth] login with ${seed.wallet.name}`, (done) => {
     request(server)
       .post("/auth")
       .set("treetracker-api-key", apiKey)
@@ -76,18 +76,18 @@ describe("Wallet integration tests", () => {
         expect(res.body).to.have.property("token");
         done();
       });
-  });
+  });*/
 
   // Tests that require logged-in authorization
 
-  it(`[GET /tokens/${seed.token.uuid}] Should be able to get a token `, async () => {
+  /*it(`[GET /tokens/${seed.token.uuid}] Should be able to get a token `, async () => {
     const res = await request(server)
       .get(`/tokens/${seed.token.uuid}`)
       .set("treetracker-api-key", apiKey)
       .set("Authorization", `Bearer ${token}`);
     expect(res).to.have.property("statusCode", 200);
     expect(res.body).to.have.property("uuid").eq(seed.token.uuid);
-  });
+  });*/
 
   describe(`Before request trust, try to send token:#${seed.token.id} from ${seed.wallet.name} to ${seed.walletB.name} should be pending (202)`, () => {
     let transferId;
