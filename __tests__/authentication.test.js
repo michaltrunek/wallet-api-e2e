@@ -1,4 +1,4 @@
-const { request, expect, responseStatus } = require("../config");
+const { request, expect, responseStatus: {OK}, assert} = require("../config");
 
 const apiKey = 'OriHFWVw3dz2fSC';
 const user = {
@@ -9,35 +9,25 @@ const user = {
 
 // end of debug lines
 
-describe('Authentication', function () {
-    it(`[POST /auth] login with wallet name: ${user.wallet}`, (done) => {
-        request
+describe('Authentication', () => {
+    it(`[POST /auth] login with wallet name: ${user.wallet}`, async () => {
+        await request
             .post('/auth')
             .set('treetracker-api-key', apiKey)
             .send({
                 wallet: user.wallet,
                 password: user.password
             })
+            .expect(OK)
             .expect('Content-Type', /application\/json/)
-            .expect(responseStatus.OK)
-            .end((err, res) => {
-                if (err) done(err);
-                expect(res.body).to.have.property('token');
-                done();
-            });
     });
 
-    it(`[POST /auth] login with using wallet id: ${user.id}`, (done) => {
-        request
+    it(`[POST /auth] login with using wallet id: ${user.id}`, async () => {
+        await request
             .post('/auth')
             .set('treetracker-api-key', apiKey)
             .send({ wallet: user.id, password: user.password })
+            .expect(OK)
             .expect('Content-Type', /application\/json/)
-            .expect(responseStatus.OK)
-            .end((err, res) => {
-                if (err) done(err);
-                expect(res.body).to.have.property('token');
-                done();
-            });
     });
 });
