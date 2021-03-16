@@ -1,7 +1,10 @@
 const { request } = require("../config");
 
-async function sendGetRequest(body) {
-
+async function sendGetRequest(url, headers, body = {}) {
+    return request
+        .get(url)
+        .set(headers)
+        .send(body);
 }
 
 async function sendPostRequest(url, headers, body) {
