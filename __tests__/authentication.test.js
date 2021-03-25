@@ -20,6 +20,7 @@ describe('Authentication', () => {
         };
 
         const response = await sendPostRequest(url, headers, body);
+
         assert.equals(response.status, OK, 'Response status code is not 200 (OK)!');
         assert.contains(response.header['content-type'], 'application\/json', 'Content type is not in a json format!');
     });
@@ -31,6 +32,7 @@ describe('Authentication', () => {
         };
 
         const response = await sendPostRequest(url, headers, body);
+
         assert.equals(response.status, OK, 'Response status code is not 200 (OK)!');
         assert.contains(response.header['content-type'], 'application\/json', 'Content type is not in a json format!');
     });

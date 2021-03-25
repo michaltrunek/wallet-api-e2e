@@ -1,4 +1,4 @@
-const { request, expect, responseStatus: {OK}, assert } = require("../config");
+const { expect, responseStatus: {OK}, assert } = require("../config");
 const { sendGetRequest } = require("../helpers/requestLibrary");
 
 // debug lines below
@@ -16,10 +16,7 @@ const headers = {
 describe("Tokens (Wallet API)", function () {
     it('Tokens - Verify all props received from details for one token', async () => {
         const response = await sendGetRequest(url, headers);
-        /*const response = await request
-            .get(`/tokens/${tokenUid}`)
-            .set('Authorization', `Bearer ${bearerToken}`)
-            .set('treetracker-api-key', apiKey);*/
+
         const {body, status} = response;
         assert.equals(status, OK, 'Response status does not equal!');
         expect(body).to.have.property("id").eq(tokenUid);
