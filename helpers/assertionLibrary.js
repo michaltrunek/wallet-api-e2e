@@ -7,16 +7,17 @@ const assert = chai.assert;
  * Assert that the expected value is included in the array/object
  * @param {Object} actual - actual value to be asserted
  * @param {Object} expected - expected value to be included
+ * @param {string} message - explanation of assert failure
  */
-function contains(actual, expected) {
-    assert.include(actual, expected);
+function contains(actual, expected, message) {
+    assert.include(actual, expected, message);
 }
 
 /**
  * Assert that the expected value equals with the actual one
  * @param {Object} actual - actual value to be asserted
  * @param {Object} expected - expected value to be compared
- * @param {string} message - explanation of assert
+ * @param {string} message - explanation of assert failure
  */
 function equals(actual, expected, message) {
     assert.equal(actual, expected, message);

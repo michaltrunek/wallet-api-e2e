@@ -7,7 +7,7 @@ describe("Seed data into DB", () => {
 
   before(async () => {
     //await seed.clear();
-    //await seed.seed();
+    await seed.seed();
   });
 
   it("Should have api key", async () => {
