@@ -87,7 +87,7 @@ const storyOfThisSeed = `
 `;
 console.debug(
   "--------------------------story of database ----------------------------------",
-  storyOfThisSeed,
+  //storyOfThisSeed,
   "-----------------------------------------------------------------------------"
 );
 
@@ -105,7 +105,7 @@ async function seed() {
   // wallet
   await knex("wallet").insert({
     id: wallet.id,
-    type: wallet.type,
+    //type: wallet.type, // todo: type is not in the table prop anymore
     name: wallet.name,
     password: wallet.passwordHash,
     salt: wallet.salt,
@@ -114,7 +114,7 @@ async function seed() {
   //walletB
   await knex("wallet").insert({
     id: walletB.id,
-    type: walletB.type,
+    //type: walletB.type,
     name: walletB.name,
     password: walletB.passwordHash,
     salt: walletB.salt,
@@ -123,21 +123,21 @@ async function seed() {
   //walletC
   await knex("wallet").insert({
     id: walletC.id,
-    type: walletC.type,
+    //type: walletC.type,
     name: walletC.name,
     password: walletC.passwordHash,
     salt: walletC.salt,
   });
 
   //relationships: 'walletB' manage 'walletC'
-  await knex("wallet_trust").insert({
+  /*await knex("wallet_trust").insert({
     type: "manage",
     actor_wallet_id: walletB.id,
     target_wallet_id: walletC.id,
     originator_wallet_id: walletB.id,
     request_type: "manage",
     state: "trusted",
-  });
+  });*/
 
   // token
   console.log("seed token");
@@ -147,7 +147,7 @@ async function seed() {
     wallet_id: wallet.id,
   });
 
-  await knex("token").insert(tokenB);
+  //await knex("token").insert(tokenB);
 }
 
 async function clear() {
@@ -155,24 +155,24 @@ async function clear() {
 
   await knex("api_key").where("key", apiKey).del();
 
-  await knex("transaction").where("source_wallet_id", wallet.id).del();
-  await knex("transaction").where("source_wallet_id", walletB.id).del();
-  await knex("transaction").where("source_wallet_id", walletC.id).del();
+  //await knex("transaction").where("source_wallet_id", wallet.id).del();
+  //await knex("transaction").where("source_wallet_id", walletB.id).del();
+  //await knex("transaction").where("source_wallet_id", walletC.id).del();
 
   await knex("token").where("id", token.id).del();
-  await knex("token").where("id", tokenB.id).del();
+  //await knex("token").where("id", tokenB.id).del();
 
-  await knex("wallet").where("id", wallet.id).del();
-  await knex("wallet").where("id", walletB.id).del();
-  await knex("wallet").where("id", walletC.id).del();
+  await knex("wallet").where("name", wallet.name).del();
+  await knex("wallet").where("name", walletB.name).del();
+  await knex("wallet").where("name", walletC.name).del();
 
-  await knex("wallet_trust").where("actor_wallet_id", wallet.id).del();
-  await knex("wallet_trust").where("actor_wallet_id", walletB.id).del();
-  await knex("wallet_trust").where("actor_wallet_id", walletC.id).del();
+  //await knex("wallet_trust").where("actor_wallet_id", wallet.id).del();
+  //await knex("wallet_trust").where("actor_wallet_id", walletB.id).del();
+  //await knex("wallet_trust").where("actor_wallet_id", walletC.id).del();
 
-  await knex("transfer").where("originator_wallet_id", walletC.id).del();
-  await knex("transfer").where("originator_wallet_id", walletC.id).del();
-  await knex("transfer").where("originator_wallet_id", walletC.id).del();
+  //await knex("transfer").where("originator_wallet_id", walletC.id).del();
+  //await knex("transfer").where("originator_wallet_id", walletC.id).del();
+  //await knex("transfer").where("originator_wallet_id", walletC.id).del();
 
   console.log("done clearing db");
 }
