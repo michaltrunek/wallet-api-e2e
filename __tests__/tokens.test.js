@@ -1,20 +1,35 @@
 const { expect, responseStatus: {OK}, assert } = require("../config");
-const { sendGetRequest } = require("../helpers/requestLibrary");
+const { sendGetRequest, sendPostRequest } = require("../helpers/requestLibrary");
+const { testData } = require("./testData/bootstrap.js");
 
 // debug lines below
-const bearerToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwYmUwMmJiLTllOWMtNGNjNC05M2VlLWVjYWFkYzUwNTRhZiIsImlhdCI6MTYxNDcwNTg3MiwiZXhwIjoxNjQ2MjQxODcyLCJpc3MiOiJncmVlbnN0YW5kIn0.oDaObEnDqbRIBsFE3a0v8kcGGjBps-_IN23iV_aFGxiWs4PiW8abI2Bmn9iSxVZ9Y6fr55E7e0LGtFf2IsKTlbZnlq_KxVRh2vMOU5-M40jGsQ275Oh5v0jKvRZT4NTJCXc9cGMAMEzO7FZ51Fy_5cx3Js0w0WCjFMxeYjVWizl4ZIr5RJZuBVKmptswG-IUhfBiHqgpHK3jtCwzy68TGEqi9DVAe_rVzj37Tp9YJV-PlJa1SbILN269ygz6XxqF7za-kdYfgiPq815x_mtuTLvzFBuV8_4E-5ZUa9HxW7RjxAg8aG6PEDrhkSfi4cCLe0Cj-NhUtC8uB6siHtUXGR9AmTdxkIXC-FXrQBjc6cgJUzmwnr2FyJnJMPlxFUIbbd7YEs-JreNCxS1bo6LtunQ69el9TRxxZ-jiOiZpDOGwehZXo2ZumjjG1oQhFLXJJNfPZh86_PeePRtzmZA0lNoEmBus4DEZW-xNnK4k1q7rfHZYYRAUKtW6wysEqTpHOANlE4vmKIrg9qGUoOCoy_1jlRWmns4YumiLEgY1fQJNI5p-CUN1KHRdq2nXTchIWN1lxZuW0UdcHEfzb0J4Wfp1x_Wq6R4IAPDWZsVwN6bVxb-4_3q4qNuShxZgYy_pRiyqRn0q1xjhq1sI0Rph51KH80gQVddHMS_qeZpygFc';
-const apiKey = 'OriHFWVw3dz2fSC';
-const tokenUid = '195c7386-63b6-4e32-8961-8b84089192a8';
+const bearerToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU1MWI3Mzg5LTI4OTAtNDQ2ZC1hNjUzLWRhODIyMzFjYzRhYyIsImlhdCI6MTYxNzA4Njc0MiwiZXhwIjoxNjQ4NjIyNzQyLCJpc3MiOiJncmVlbnN0YW5kIn0.G7uK74OEvE8E_SfYVQ5xGAZ137iv0WjP4ecmalzUE6q1bmgAzTtIAiXlFBlm8FYblYia4a-SfE4D-rVT2sASclT13IK0jYcfrKFWQ4oJBEGb-8-ZKuWm6R0WGEP0KT-zCEXTL9nrArGre-uM4-Q10ItyX7FJpsbhRjN2-82txKW5goTRuuA8LaC2ifhgrpoWFH09u-cYzJkNAqKyrDTARUX92ym_oxNsAu_l-XuCdGCQkZ1ST7Uhzc2O8ZZwPPDBx_XChoMIXGN8SwrlRVETUxNhk3EBREyYXGsXVyl3klymJdZQHchHD05VzLeHLAzf00h8Umi7YIcIJmQrNEhA6BwodaHyJOJwXPF-pcao5ogmqgdPJb6MYtoLQtt35r-T1ob2yosddLxpaNEuWZ9rmK1wvlzzX_1yyZPhooEXjcTaWYcXVJPUd5QhdbD14fzLSKFDsbm2pj4PAY0vRnpX6dr8knmHqIrIyfrYtKlW_VJeQsfgLZLAQs7iBYHmO2tvrStgTSNXLQqDBejla3PX8XQHblr4w1S4f6hZFHVN3eCZGuK3YNuiZO2ephZa3zD0jy0EYm8LcMvCnhRTXGFjAlGy_unaszNpdcObDNg9tmqdfr36x9JYgBYENkAbLnBeAlX4MENv8M8tMeCAsKjeaEahkVu1V9Tu4oEGXMDVY4E';
+let bearer = null;
+const apiKey = testData.apiKey;
+const tokenUid = testData.token.id;
 const url = `/tokens/${tokenUid}`;
-const headers = {
-    'Authorization': `Bearer ${bearerToken}`,
-    'treetracker-api-key': apiKey
-}
-
-// end of debug lines
 
 describe("Tokens (Wallet API)", function () {
-    it('Tokens - Verify all props received from details for one token', async () => {
+    before(async () => {
+        console.log('Getting bearer token...');
+        const url = '/auth';
+        const header = {'treetracker-api-key': apiKey};
+
+        const body = {
+            wallet: testData.wallet.name,
+            password: testData.wallet.password
+        };
+        bearer = await sendPostRequest(url, header, body);
+        assert.equals(bearer.status, OK, 'Response status code is not 200 (OK)!');
+    });
+
+    it('Tokens - Verify all props received from details for one token @token @regression', async () => {
+        console.log(tokenUid);
+        const { token } = bearer.body;
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'treetracker-api-key': apiKey
+        };
         const response = await sendGetRequest(url, headers);
 
         const {body, status} = response;

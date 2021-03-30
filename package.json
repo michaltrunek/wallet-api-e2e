@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "scripts": {
     "dbseed": "NODE_TLS_REJECT_UNAUTHORIZED='0' mocha --timeout 15000 $npm_package_config_db",
-    "test": "NODE_TLS_REJECT_UNAUTHORIZED='0' mocha --timeout 15000 $npm_package_config_filter"
+    "test": "NODE_TLS_REJECT_UNAUTHORIZED='0' mocha --config ./.mocharc.js"
   },
   "config": {
     "db": "./database/*.test.js",
     "filter": "./__tests__/*.test.js",
     "env": "testsystem",
-    "grep": "@wallet"
+    "grep": "@regression"
   },
   "devDependencies": {
     "assert": "1.5.0",
