@@ -28,4 +28,4 @@ jobs:
         HOST: ${{ secrets.HOST }}
         PORT: ${{ secrets.PORT }}
     - run: npm ci
-    - run: npm test
+    - run: npm test -Parg1=$PASSWORD -Parg2=$DBUSERNAME
