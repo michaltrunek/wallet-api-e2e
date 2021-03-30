@@ -3,6 +3,7 @@ const data = require("../../database/seed.js");
 exports.mochaHooks = {
     beforeAll: async () => {
         console.log('Creating test data in DB...');
+        console.log(process.env.DBUSERNAME);
         await data.seed();
     },
     afterAll: async () => {
