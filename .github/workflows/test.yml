@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12
-      env:
+    - env:
         PASSWORD: ${{ secrets.PASSWORD }}
         DATABASE: ${{ secrets.DATABASE }}
         DATABASE_SCHEMA: ${{ secrets.DATABASE_SCHEMA }}
