@@ -9,7 +9,7 @@ tag = tag !== undefined ? tag : '';
 module.exports = {
     //'allow-uncaught': false,
     //'async-only': false,
-    //bail: false,
+    bail: false,
     //'check-leaks': false,
     color: true,
     //delay: false,
@@ -22,7 +22,7 @@ module.exports = {
     //'forbid-pending': false,
     //'full-trace': false,
     //global: ['jQuery', '$'],
-    grep: tag, // fgrep and grep are mutually exclusive
+    //grep: tag, // fgrep and grep are mutually exclusive
     //growl: false,
     //'inline-diffs': false,
     // invert: false, // needs to be used with grep or fgrep
@@ -36,7 +36,8 @@ module.exports = {
     retries: 1,
     //slow: '75',
     //sort: false,
-    spec: ['./__tests__/*.test.js'],
+    //spec: ['./__tests__/*.test.js'],
+    spec: ['./database/*.test.js', './__tests__/*.test.js'],
     timeout: '15000',
     //'trace-warnings': true, // node flags ok
     //ui: 'bdd',

@@ -2,7 +2,7 @@
   "name": "treetracker-e2e-automation",
   "version": "0.0.1",
   "scripts": {
-    "dbseed": "NODE_TLS_REJECT_UNAUTHORIZED='0' mocha --timeout 15000 $npm_package_config_db",
+    "dbseed": "NODE_TLS_REJECT_UNAUTHORIZED='0' mocha $npm_package_config_db",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED='0' mocha --config ./.mocharc.js"
   },
   "config": {

@@ -5,10 +5,10 @@ const knex = require("./knex");
 describe("Seed data into DB", () => {
   let token;
 
-  before(async () => {
+/*  before(async () => {
     await seed.clear();
     await seed.seed();
-  });
+  });*/
 
   it("Should have api key", async () => {
     const r = await knex.table("api_key").select().where("key", seed.apiKey);
@@ -49,6 +49,6 @@ describe("Seed data into DB", () => {
   });
 });
 
-after(async () => {
+/*after(async () => {
   knex.destroy();
-});
+});*/
