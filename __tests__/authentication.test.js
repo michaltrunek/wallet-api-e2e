@@ -1,8 +1,7 @@
-const { responseStatus: {OK}, assert } = require("../config");
+const { responseStatus: {OK}, assert, log } = require("../config");
 const { sendPostRequest } = require("../helpers/requestLibrary");
 const { testData } = require("./testData/bootstrap.js");
 let currentResponse = null;
-let testFailures = [];
 
 const apiKey = testData.apiKey;
 const url = '/auth';
@@ -12,8 +11,6 @@ const user = {
     wallet: testData.wallet.name,
     password: testData.wallet.password,
 };
-
-// end of debug lines
 
 describe('Authentication', () => {
     it('[POST /auth] login with wallet name @auth @regression', async () => {
@@ -41,27 +38,6 @@ describe('Authentication', () => {
     });
 
     afterEach(function() {
-        const errorBody = currentResponse && currentResponse.body;
-
-        if (this.currentTest.state === 'failed' && errorBody) {
-            testFailures.push({
-                test: this.currentTest.title,
-                error: errorBody
-            });
-        }
-
-        currentResponse = null;
-    });
-
-    after(() => {
-        if (testFailures.length) {
-            console.log('**************');
-            console.log('Test failures:');
-            console.log('**************');
-            testFailures.forEach(testFailure => {
-                console.log(testFailure.test);
-                console.log(testFailure.error);
-            })
-        }
+        log.reportExtendedOnFailure(currentResponse, this.currentTest);
     });
 });
