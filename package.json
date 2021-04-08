@@ -9,7 +9,7 @@
     "db": "./database/*.test.js",
     "filter": "./__tests__/*.test.js",
     "env": "testsystem",
-    "grep": "@regression"
+    "grep": "@debug"
   },
   "devDependencies": {
     "assert": "1.5.0",

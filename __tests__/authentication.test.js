@@ -1,6 +1,6 @@
 const { responseStatus: {OK}, assert, log } = require("../config");
 const { sendPostRequest } = require("../helpers/requestLibrary");
-const { testData } = require("./testData/bootstrap.js");
+const { testData } = require("../helpers/bootstrap.js");
 let currentResponse = null;
 
 const apiKey = testData.apiKey;
