@@ -1,39 +1,43 @@
-const {responseStatus: {OK}, assert} = require("../config");
+const { responseStatus: {OK}, assert, log } = require("../config");
 const { sendPostRequest } = require("../helpers/requestLibrary");
+const { testData } = require("./testData/bootstrap.js");
+let currentResponse = null;
 
-const apiKey = 'OriHFWVw3dz2fSC';
+const apiKey = testData.apiKey;
 const url = '/auth';
 const headers = {'treetracker-api-key': apiKey};
 const user = {
-    id: '40be02bb-9e9c-4cc4-93ee-ecaadc5054af',
-    wallet: 'Isabelle_Bahringer73',
-    password: 'pnlTaHL5n0cQfPG',
+    id: testData.wallet.id,
+    wallet: testData.wallet.name,
+    password: testData.wallet.password,
 };
 
-// end of debug lines
-
 describe('Authentication', () => {
-    it(`[POST /auth] login with wallet name: ${user.wallet}`, async () => {
+    it('[POST /auth] login with wallet name @auth @regression', async () => {
         const body = {
             wallet: user.wallet,
             password: user.password
         };
 
-        const response = await sendPostRequest(url, headers, body);
+        currentResponse = await sendPostRequest(url, headers, body);
 
-        assert.equals(response.status, OK, 'Response status code is not 200 (OK)!');
-        assert.contains(response.header['content-type'], 'application\/json', 'Content type is not in a json format!');
+        assert.equals(currentResponse.status, OK, 'Response status code is not 200 (OK)!');
+        assert.contains(currentResponse.header['content-type'], 'application\/json', 'Content type is not in a json format!');
     });
 
-    it(`[POST /auth] login with using wallet id: ${user.id}`, async () => {
+    it('[POST /auth] login with using wallet ID @auth @regression', async () => {
         const body = {
             wallet: user.id,
             password: user.password
         };
 
-        const response = await sendPostRequest(url, headers, body);
+        currentResponse = await sendPostRequest(url, headers, body);
 
-        assert.equals(response.status, OK, 'Response status code is not 200 (OK)!');
-        assert.contains(response.header['content-type'], 'application\/json', 'Content type is not in a json format!');
+        assert.equals(currentResponse.status, OK, 'Response status code is not 200 (OK)!');
+        assert.contains(currentResponse.header['content-type'], 'application\/json', 'Content type is not in a json format!');
+    });
+
+    afterEach(function() {
+        log.reportExtendedOnFailure(currentResponse, this.currentTest);
     });
 });

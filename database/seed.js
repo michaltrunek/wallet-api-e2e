@@ -85,11 +85,6 @@ const storyOfThisSeed = `
 
 
 `;
-console.debug(
-  "--------------------------story of database ----------------------------------",
-  //storyOfThisSeed,
-  "-----------------------------------------------------------------------------"
-);
 
 async function seed() {
   console.log("seed api key");
@@ -150,7 +145,7 @@ async function seed() {
   //await knex("token").insert(tokenB);
 }
 
-async function clear() {
+async function clear(tokenId) {
   console.log("clearing db");
 
   await knex("api_key").where("key", apiKey).del();
@@ -159,7 +154,7 @@ async function clear() {
   //await knex("transaction").where("source_wallet_id", walletB.id).del();
   //await knex("transaction").where("source_wallet_id", walletC.id).del();
 
-  await knex("token").where("id", token.id).del();
+  await knex("token").where("id", tokenId).del();
   //await knex("token").where("id", tokenB.id).del();
 
   await knex("wallet").where("name", wallet.name).del();
