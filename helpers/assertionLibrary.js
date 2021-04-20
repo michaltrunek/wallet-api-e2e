@@ -18,9 +18,10 @@ function contains(actual, expected, message) {
  * @param {Object} actual - actual value to be asserted
  * @param {Object} expected - expected value to be compared
  * @param {string} message - explanation of assert failure
+ * @param {Object} responseBody - response body content (optional)
  */
-function equals(actual, expected, message) {
-    assert.equal(actual, expected, message);
+function equals(actual, expected, message, responseBody = {}) {
+    assert.equal(actual, expected, `${message} Details: \n ${JSON.stringify(responseBody, undefined, 2)}`);
 }
 
 /**

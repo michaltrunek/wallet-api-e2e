@@ -1,4 +1,4 @@
-const { assert } = require("../config");
+const { responseStatus: {OK}, assert } = require("../config");
 const { sendPostRequest } = require("./requestLibrary");
 const { testData } = require("./bootstrap");
 
@@ -7,13 +7,14 @@ async function getSession(wallet, password) {
     const url = '/auth';
     const header = {'treetracker-api-key': apiKey};
 
-    const body = {
+    const payload = {
         wallet: wallet,
         password: password
     };
-    const response = await sendPostRequest(url, header, body);
-    assert.equals(response.status, 200, 'Response status code is not 200 (OK)!');
-    return response.body;
+    const response = await sendPostRequest(url, header, payload);
+    const { body, status } = response;
+    assert.equals(status, OK, 'Response status code is not 200 (OK)!', body);
+    return body;
 }
 
 module.exports = {

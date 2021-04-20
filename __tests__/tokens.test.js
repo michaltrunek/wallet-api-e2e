@@ -1,5 +1,5 @@
 const { expect, responseStatus: {OK}, assert } = require("../config");
-const { sendGetRequest, sendPostRequest } = require("../helpers/requestLibrary");
+const { sendGetRequest } = require("../helpers/requestLibrary");
 const { getSession } = require("../helpers/sessionLibrary");
 const { testData } = require("../helpers/bootstrap.js");
 
@@ -23,8 +23,8 @@ describe("Tokens (Wallet API)", function () {
         };
         const response = await sendGetRequest(url, headers);
 
-        const {body, status} = response;
-        assert.equals(status, OK, 'Response status does not equal!');
+        const { body, status } = response;
+        assert.equals(status, OK, 'Response status does not equal!', body);
         expect(body).to.have.property("id").eq(tokenUid);
         expect(body).to.have.property("capture_id");
         expect(body).to.have.property("wallet_id");

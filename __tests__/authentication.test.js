@@ -36,8 +36,4 @@ describe('Authentication', () => {
         assert.equals(currentResponse.status, OK, 'Response status code is not 200 (OK)!');
         assert.contains(currentResponse.header['content-type'], 'application\/json', 'Content type is not in a json format!');
     });
-
-    afterEach(function() {
-        log.reportExtendedOnFailure(currentResponse, this.currentTest);
-    });
 });
