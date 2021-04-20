@@ -32,7 +32,7 @@ module.exports = {
     //recursive: false,
     reporter: 'spec',
     //'reporter-option': ['foo=bar', 'baz=quux'],
-    require: './__tests__/testData/bootstrap.js',
+    require: './helpers/bootstrap.js',
     retries: 1,
     //slow: '75',
     //sort: false,

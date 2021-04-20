@@ -1,6 +1,6 @@
 const { responseStatus: {OK}, assert, log } = require("../config");
 const { sendPostRequest } = require("../helpers/requestLibrary");
-const { testData } = require("./testData/bootstrap.js");
+const { testData } = require("../helpers/bootstrap.js");
 let currentResponse = null;
 
 const apiKey = testData.apiKey;
@@ -35,9 +35,5 @@ describe('Authentication', () => {
 
         assert.equals(currentResponse.status, OK, 'Response status code is not 200 (OK)!');
         assert.contains(currentResponse.header['content-type'], 'application\/json', 'Content type is not in a json format!');
-    });
-
-    afterEach(function() {
-        log.reportExtendedOnFailure(currentResponse, this.currentTest);
     });
 });

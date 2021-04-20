@@ -1,4 +1,4 @@
-const data = require("../../database/seed.js");
+const data = require("../database/seed.js");
 
 exports.mochaHooks = {
     beforeAll: async () => {
