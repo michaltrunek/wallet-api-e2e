@@ -7,8 +7,8 @@ exports.mochaHooks = {
         await data.seed();
     },
     afterAll: async () => {
-        console.log('Clearing test data from DB!');
-        await data.clear(data.token.id);
+        //console.log('Clearing test data from DB!');
+        //await data.clear(data.token.id);
     }
 };
 
