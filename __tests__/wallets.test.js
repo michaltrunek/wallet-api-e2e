@@ -1,7 +1,6 @@
-const { responseStatus: {OK}, assert } = require("../config");
-const { sendGetRequest, sendPostRequest } = require("../helpers/requestLibrary");
-const { getSession } = require("../helpers/sessionLibrary");
-const { testData } = require("../helpers/bootstrap.js");
+const { sendGetRequest, sendPostRequest, responseStatus: {OK}, assert } = require("../config");
+const { getSession } = require("../libs/sessionLibrary");
+const { testData } = require("../libs/bootstrap.js");
 const faker = require('faker');
 
 let bearer = null;

@@ -1,5 +1,4 @@
-const { responseStatus: {OK}, assert } = require("../config");
-const { sendPostRequest } = require("./requestLibrary");
+const { sendPostRequest, responseStatus: {OK}, assert } = require("../config");
 const { testData } = require("./bootstrap");
 
 async function getSession(wallet, password) {
