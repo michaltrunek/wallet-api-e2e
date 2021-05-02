@@ -1,5 +1,4 @@
 const {expect, sendGetRequest, sendPostRequest, responseStatus: {OK, ACCEPTED}, assert} = require("../config");
-//const {sendGetRequest, sendPostRequest} = require("../helpers/requestLibrary");
 const {getSession} = require("../libs/sessionLibrary");
 const {testData} = require("../libs/bootstrap.js");
 
