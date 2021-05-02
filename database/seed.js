@@ -2,6 +2,7 @@
  * seed data to DB for testing
  */
 const uuid = require("uuid");
+const { v4: uuidV4 } = require('uuid');
 const knex = require("./knex");
 
 const apiKey = "FORTESTFORTESTFORTESTFORTESTFORTEST";
@@ -100,7 +101,6 @@ async function seed() {
   // wallet
   await knex("wallet").insert({
     id: wallet.id,
-    //type: wallet.type, // todo: type is not in the table prop anymore
     name: wallet.name,
     password: wallet.passwordHash,
     salt: wallet.salt,
@@ -109,7 +109,6 @@ async function seed() {
   //walletB
   await knex("wallet").insert({
     id: walletB.id,
-    //type: walletB.type,
     name: walletB.name,
     password: walletB.passwordHash,
     salt: walletB.salt,
@@ -118,7 +117,6 @@ async function seed() {
   //walletC
   await knex("wallet").insert({
     id: walletC.id,
-    //type: walletC.type,
     name: walletC.name,
     password: walletC.passwordHash,
     salt: walletC.salt,
@@ -136,16 +134,48 @@ async function seed() {
 
   // token
   console.log("seed token");
+
+  await createTokens(wallet.id, 5);
+  //await createTokens(walletB.id, 5);
+  //await createTokens(walletC.id, 5);
+
   await knex("token").insert({
     id: token.id,
     capture_id: capture.id,
     wallet_id: wallet.id,
   });
-
-  //await knex("token").insert(tokenB);
 }
 
-async function clear(tokenId) {
+async function createTokens(targetWallet, numberOfTokens) {
+  let tokenIds = [];
+  for(let i = 0; i < numberOfTokens; i++) {
+    let tokenId = uuidV4();
+    await knex("token").insert({
+      id: tokenId,
+      capture_id: uuidV4(),
+      wallet_id: targetWallet,
+    });
+    tokenIds.push(tokenId);
+  }
+  return tokenIds;
+/*  const capture = {
+    id: uuidV4(),
+  };
+
+  const token = {
+    id: uuidV4(),
+  };
+  for(const token of tokens) {
+    await knex("token").insert({
+      id: token.id,
+      capture_id: capture.id,
+      wallet_id: wallet.id,
+    });
+  }*/
+
+}
+
+async function clear(wallets) {
   console.log("clearing db");
 
   await knex("api_key").where("key", apiKey).del();
@@ -154,8 +184,9 @@ async function clear(tokenId) {
   //await knex("transaction").where("source_wallet_id", walletB.id).del();
   //await knex("transaction").where("source_wallet_id", walletC.id).del();
 
-  await knex("token").where("id", tokenId).del();
-  //await knex("token").where("id", tokenB.id).del();
+  for (const wallet of wallets) {
+    await knex("token").where("wallet_id", wallet).del();
+  }
 
   await knex("wallet").where("name", wallet.name).del();
   await knex("wallet").where("name", walletB.name).del();

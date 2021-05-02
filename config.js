@@ -2,15 +2,28 @@
 const request = require("supertest")("https://dev-k8s.treetracker.org/wallet");
 const expect = require("chai").expect;
 const responseStatus = require("http-status-codes");
-const assert = require("./helpers/assertionLibrary.js");
-const log = require("./helpers/loggingLibrary.js");
+const assert = require("./libs/assertionLibrary.js");
 const seed = require("./database/seed.js");
 
+async function sendGetRequest(url, headers, body = {}) {
+    return request
+        .get(url)
+        .set(headers)
+        .send(body);
+}
+
+async function sendPostRequest(url, headers, body) {
+    return request
+        .post(url)
+        .set(headers)
+        .send(body);
+}
+
 module.exports = {
-    request,
+    sendGetRequest,
+    sendPostRequest,
     expect,
     responseStatus,
     assert,
-    log,
     seed
 };
