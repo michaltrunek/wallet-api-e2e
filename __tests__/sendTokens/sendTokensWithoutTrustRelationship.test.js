@@ -1,7 +1,7 @@
-const {expect, sendGetRequest, sendPostRequest, responseStatus: {OK, ACCEPTED}, assert} = require("../config");
-const {getSession} = require("../libs/sessionLibrary");
-const {testData} = require("../libs/bootstrap.js");
-const {assertSendTokensBody, assertTransferCompletedBody, assertTransferDeclinedBody} = require("../helpers/tokenActionsHelper.js");
+const {expect, sendGetRequest, sendPostRequest, responseStatus: {OK}, assert} = require("../../config");
+const {getSession} = require("../../libs/sessionLibrary");
+const {testData} = require("../../libs/bootstrap.js");
+const {assertSendTokensBody, assertTransferCompletedBody, assertTransferDeclinedBody} = require("../../helpers/tokenActionsHelper.js");
 
 let senderBearerToken, receiverBearerToken, receiverEmptyBearerToken = null;
 const apiKey = testData.apiKey;
@@ -33,7 +33,7 @@ const payload = (walletA, walletB) => {
     }
 };
 
-describe("Tokens (Wallet API)", function () {
+describe("Sending tokens without trust relationship (Wallet API)", function () {
     before(async () => {
         senderBearerToken = await getSession(senderWallet, password);
         receiverBearerToken = await getSession(receiverWallet, password);
