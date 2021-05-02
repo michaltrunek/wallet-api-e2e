@@ -1,5 +1,6 @@
-const {expect, sendPostRequest, responseStatus: {OK}, assert} = require("../../config");
+const {expect, sendPostRequest, sendGetRequest, responseStatus: {OK}, assert} = require("../../config");
 const {assertTransferCompletedBody} = require("../../helpers/tokenActionsHelper.js");
+const {assertTokenInWallet} = require("../../helpers/walletActionsHelper.js");
 const {getSession} = require("../../libs/sessionLibrary");
 const {testData} = require("../../libs/bootstrap.js");
 
@@ -8,7 +9,7 @@ const apiKey = testData.apiKey;
 const sendTokensUri = '/transfers';
 const trustRelationshipUri = '/trust_relationships';
 const acceptTrustRelationshipUri = (id) => `/trust_relationships/${id}/accept`
-
+const getWalletInfoUri = (limit) => `/wallets?limit=${limit}`;
 const receiverWallet = testData.walletTrustE.name;
 const senderWallet = testData.walletTrustD.name;
 const password = testData.wallet.password;
@@ -57,5 +58,9 @@ describe("Sending tokens with trust relationship (Wallet API)",function () {
 
         const sendTokenResponse = await sendPostRequest(sendTokensUri, headers(senderBearerToken.token), payload(senderWallet, receiverWallet));
         assertTransferCompletedBody(sendTokenResponse, senderWallet, receiverWallet);
+
+        const limit = 50;
+        const getWalletInfoResponse = await sendGetRequest(getWalletInfoUri(limit), headers(receiverBearerToken.token));
+        await assertTokenInWallet(getWalletInfoResponse, receiverWallet, 1);
     });
 });
