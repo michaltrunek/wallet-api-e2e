@@ -1,4 +1,6 @@
-const {expect, responseStatus: {ACCEPTED, OK}, assert} = require("../config");
+const expect = require("chai").expect;
+const {ACCEPTED} = require("http-status-codes");
+const assert = require("../libs/assertionLibrary.js");
 
 /**
  * Assert send tokens response body to have expected properties and correct wallet names are included
@@ -21,7 +23,6 @@ function assertSendTokensBody(response, senderWallet, receiverWallet) {
  * @param {String} receiverWallet
  */
 function assertTransferCompletedBody(response, senderWallet, receiverWallet) {
-    assertTransferBody(response, senderWallet, receiverWallet);
     expect(response.body).to.have.property("state").eq("completed");
 }
 
@@ -32,16 +33,7 @@ function assertTransferCompletedBody(response, senderWallet, receiverWallet) {
  * @param {String} receiverWallet
  */
 function assertTransferDeclinedBody(response, senderWallet, receiverWallet) {
-    assertTransferBody(response, senderWallet, receiverWallet);
     expect(response.body).to.have.property("state").eq("cancelled");
-}
-
-function assertTransferBody(response, senderWallet, receiverWallet) {
-    assert.equals(response.status, OK, 'Response status does not equal!');
-    expect(response.body).to.have.property("id");
-    expect(response.body).to.have.property("type").eq("send");
-    expect(response.body).to.have.property("originating_wallet").eq(senderWallet);
-    expect(response.body).to.have.property("destination_wallet").eq(receiverWallet);
 }
 
 module.exports = {

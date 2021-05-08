@@ -49,6 +49,26 @@ const walletC = {
   type: "p",
 };
 
+const walletTrustD = {
+  id: uuid.v4(),
+  name: "walletD",
+  password: "test1234",
+  passwordHash:
+      "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
+  salt: "TnDe2LDPS7VaPD9GQWL3fhG4jk194nde",
+  type: "p",
+};
+
+const walletTrustE = {
+  id: uuid.v4(),
+  name: "walletE",
+  password: "test1234",
+  passwordHash:
+      "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
+  salt: "TnDe2LDPS7VaPD9GQWL3fhG4jk194nde",
+  type: "p",
+};
+
 const tokenB = {
   id: uuid.v4(),
   capture_id: captureB.id,
@@ -122,6 +142,22 @@ async function seed() {
     salt: walletC.salt,
   });
 
+  //walletD
+  await knex("wallet").insert({
+    id: walletTrustD.id,
+    name: walletTrustD.name,
+    password: walletTrustD.passwordHash,
+    salt: walletTrustD.salt,
+  });
+
+  //walletE
+  await knex("wallet").insert({
+    id: walletTrustE.id,
+    name: walletTrustE.name,
+    password: walletTrustE.passwordHash,
+    salt: walletTrustE.salt,
+  });
+
   //relationships: 'walletB' manage 'walletC'
   /*await knex("wallet_trust").insert({
     type: "manage",
@@ -136,8 +172,7 @@ async function seed() {
   console.log("seed token");
 
   await createTokens(wallet.id, 5);
-  //await createTokens(walletB.id, 5);
-  //await createTokens(walletC.id, 5);
+  await createTokens(walletTrustD.id, 2);
 
   await knex("token").insert({
     id: token.id,
@@ -158,21 +193,6 @@ async function createTokens(targetWallet, numberOfTokens) {
     tokenIds.push(tokenId);
   }
   return tokenIds;
-/*  const capture = {
-    id: uuidV4(),
-  };
-
-  const token = {
-    id: uuidV4(),
-  };
-  for(const token of tokens) {
-    await knex("token").insert({
-      id: token.id,
-      capture_id: capture.id,
-      wallet_id: wallet.id,
-    });
-  }*/
-
 }
 
 async function clear(wallets) {
@@ -180,6 +200,9 @@ async function clear(wallets) {
 
   await knex("api_key").where("key", apiKey).del();
 
+  for (const wallet of wallets) {
+    await knex("transaction").where("source_wallet_id", wallet).del();
+  }
   //await knex("transaction").where("source_wallet_id", wallet.id).del();
   //await knex("transaction").where("source_wallet_id", walletB.id).del();
   //await knex("transaction").where("source_wallet_id", walletC.id).del();
@@ -191,8 +214,14 @@ async function clear(wallets) {
   await knex("wallet").where("name", wallet.name).del();
   await knex("wallet").where("name", walletB.name).del();
   await knex("wallet").where("name", walletC.name).del();
+  await knex("wallet").where("name", walletTrustE.name).del();
+  await knex("wallet").where("name", walletTrustD.name).del();
 
-  //await knex("wallet_trust").where("actor_wallet_id", wallet.id).del();
+  for (const wallet of wallets) {
+    await knex("wallet_trust").where("actor_wallet_id", wallet).del();
+  }
+  //await knex("wallet_trust").where("actor_wallet_id", walletTrustD.id).del();
+  //await knex("wallet_trust").where("actor_wallet_id", walletTrustE.id).del();
   //await knex("wallet_trust").where("actor_wallet_id", walletB.id).del();
   //await knex("wallet_trust").where("actor_wallet_id", walletC.id).del();
 
@@ -210,6 +239,8 @@ module.exports = {
   wallet,
   walletB,
   walletC,
+  walletTrustD,
+  walletTrustE,
   capture,
   token,
   tokenB,

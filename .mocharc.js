@@ -37,7 +37,7 @@ module.exports = {
     //slow: '75',
     //sort: false,
     //spec: ['./__tests__/*.test.js'],
-    spec: ['./database/*.test.js', './__tests__/*.test.js'],
+    spec: ['./database/*.test.js', './__tests__/**/*.test.js'],
     timeout: '15000',
     //'trace-warnings': true, // node flags ok
     //ui: 'bdd',

@@ -1,7 +1,8 @@
-const {expect, sendGetRequest, sendPostRequest, responseStatus: {OK, ACCEPTED}, assert} = require("../config");
-const {getSession} = require("../libs/sessionLibrary");
-const {testData} = require("../libs/bootstrap.js");
-const {assertSendTokensBody, assertTransferCompletedBody, assertTransferDeclinedBody} = require("../helpers/tokenActionsHelper.js");
+const {expect, sendGetRequest, sendPostRequest, responseStatus: {OK}, assert} = require("../../config");
+const {getSession} = require("../../libs/sessionLibrary");
+const {testData} = require("../../libs/bootstrap.js");
+const {assertSendTokensBody, assertTransferCompletedBody, assertTransferDeclinedBody} = require("../../helpers/tokenActionsHelper.js");
+const {assertTokenInWallet} = require("../../helpers/walletActionsHelper.js");
 
 let senderBearerToken, receiverBearerToken, receiverEmptyBearerToken = null;
 const apiKey = testData.apiKey;
@@ -33,7 +34,7 @@ const payload = (walletA, walletB) => {
     }
 };
 
-describe("Tokens (Wallet API)", function () {
+describe("Sending tokens without trust relationship (Wallet API)", function () {
     before(async () => {
         senderBearerToken = await getSession(senderWallet, password);
         receiverBearerToken = await getSession(receiverWallet, password);
@@ -65,15 +66,7 @@ describe("Tokens (Wallet API)", function () {
 
         const limit = 50;
         const getWalletInfoResponse = await sendGetRequest(getWalletInfoUri(limit), headers(receiverBearerToken.token));
-        const {wallets} = getWalletInfoResponse.body;
-        assert.equals(getWalletInfoResponse.status, OK, 'Response status does not match!');
-
-        for (let wallet of wallets) {
-            if (Object.values(wallet).includes(receiverWallet)) {
-                assert.equals(wallet.tokens_in_wallet, 1, 'Number of expected tokens do not equal!');
-                break;
-            }
-        }
+        await assertTokenInWallet(getWalletInfoResponse, receiverWallet, 1);
     });
 
     it('Tokens - Declined transfer of a token from A to B without trust relationship @token @regression @debug', async () => {
@@ -86,15 +79,6 @@ describe("Tokens (Wallet API)", function () {
 
         const limit = 50;
         const getWalletInfoResponse = await sendGetRequest(getWalletInfoUri(limit), headers(receiverEmptyBearerToken.token));
-        const {wallets} = getWalletInfoResponse.body;
-
-        assert.equals(getWalletInfoResponse.status, OK, 'Response status does not match!');
-
-        for (let wallet of wallets) {
-            if (Object.values(wallet).includes(receiverEmptyWallet)) {
-                assert.equals(wallet.tokens_in_wallet, 0, 'Number of expected tokens do not equal!');
-                break;
-            }
-        }
+        await assertTokenInWallet(getWalletInfoResponse, receiverEmptyWallet, 0);
     });
 });
