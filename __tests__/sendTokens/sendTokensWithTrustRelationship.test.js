@@ -27,7 +27,8 @@ const payload = (walletA, walletB) => {
             "bundle_size": 1
         },
         "sender_wallet": walletA,
-        "receiver_wallet": walletB
+        "receiver_wallet": walletB,
+        "claim": false
     }
 };
 

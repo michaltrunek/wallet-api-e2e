@@ -29,7 +29,8 @@ const payload = (walletA, walletB) => {
             "bundle_size": 1
         },
         "sender_wallet": walletA,
-        "receiver_wallet": walletB
+        "receiver_wallet": walletB,
+        "claim": false
     }
 };
 
@@ -61,7 +62,7 @@ describe("Sending tokens via managed wallet (Wallet API)",function () {
         expect(acceptedTrustBody).to.have.property("state").eq('trusted');
         console.log(acceptTrustResponse.body);
 
-        /*const sendTokenResponse = await sendPostRequest(sendTokensUri, headers(managingWalletToken.token), payload(walletA, walletB));
+/*        const sendTokenResponse = await sendPostRequest(sendTokensUri, headers(managingWalletToken.token), payload(walletA, walletB));
         assertSendTokensBody(sendTokenResponse, walletA, walletB);
         const {id} = sendTokenResponse.body;
 
