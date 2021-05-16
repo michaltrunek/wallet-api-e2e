@@ -33,7 +33,7 @@ module.exports = {
     reporter: 'spec',
     //'reporter-option': ['foo=bar', 'baz=quux'],
     require: './libs/bootstrap.js',
-    retries: 1,
+    retries: 0,
     //slow: '75',
     //sort: false,
     //spec: ['./__tests__/*.test.js'],

@@ -19,6 +19,24 @@ async function assertTokenInWallet(walletInfoResponse, expectedWallet, expectedN
     }
 }
 
+/**
+ * Get number of tokens from a specific wallet
+ * @param {Object} walletInfoResponse
+ * @param {String} expectedWallet
+ * @return {Number} number of tokens in specific wallet
+ */
+async function getNumberOfTokensFromWallet(walletInfoResponse, expectedWallet) {
+    const {wallets} = walletInfoResponse.body;
+    assert.equals(walletInfoResponse.status, OK, 'Response status does not match!');
+
+    for (let wallet of wallets) {
+        if (Object.values(wallet).includes(expectedWallet)) {
+            return wallet.tokens_in_wallet;
+        }
+    }
+}
+
 module.exports = {
-    assertTokenInWallet
+    assertTokenInWallet,
+    getNumberOfTokensFromWallet
 };

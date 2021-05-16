@@ -17,24 +17,12 @@ const wallet = {
   type: "p",
 };
 
-const capture = {
-  id: uuid.v4(),
-};
-
-const captureB = {
-  id: uuid.v4(),
-};
-
-const token = {
-  id: uuid.v4(),
-};
-
 const walletB = {
   id: uuid.v4(),
   name: "walletB",
   password: "test1234",
   passwordHash:
-    "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
+      "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
   salt: "TnDe2LDPS7VaPD9GQWL3fhG4jk194nde",
   type: "p",
 };
@@ -44,7 +32,7 @@ const walletC = {
   name: "walletC",
   password: "test1234",
   passwordHash:
-    "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
+      "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
   salt: "TnDe2LDPS7VaPD9GQWL3fhG4jk194nde",
   type: "p",
 };
@@ -67,6 +55,28 @@ const walletTrustE = {
       "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
   salt: "TnDe2LDPS7VaPD9GQWL3fhG4jk194nde",
   type: "p",
+};
+
+const managingWallet = {
+  id: uuid.v4(),
+  name: "managingWallet",
+  password: "test1234",
+  passwordHash:
+      "31dd4fe716e1a908f0e9612c1a0e92bfdd9f66e75ae12244b4ee8309d5b869d435182f5848b67177aa17a05f9306e23c10ba41675933e2cb20c66f1b009570c1",
+  salt: "TnDe2LDPS7VaPD9GQWL3fhG4jk194nde",
+  type: "p",
+};
+
+const capture = {
+  id: uuid.v4(),
+};
+
+const captureB = {
+  id: uuid.v4(),
+};
+
+const token = {
+  id: uuid.v4(),
 };
 
 const tokenB = {
@@ -158,6 +168,14 @@ async function seed() {
     salt: walletTrustE.salt,
   });
 
+  //managing wallet
+  await knex("wallet").insert({
+    id: managingWallet.id,
+    name: managingWallet.name,
+    password: managingWallet.passwordHash,
+    salt: managingWallet.salt,
+  });
+
   //relationships: 'walletB' manage 'walletC'
   /*await knex("wallet_trust").insert({
     type: "manage",
@@ -214,8 +232,9 @@ async function clear(wallets) {
   await knex("wallet").where("name", wallet.name).del();
   await knex("wallet").where("name", walletB.name).del();
   await knex("wallet").where("name", walletC.name).del();
-  await knex("wallet").where("name", walletTrustE.name).del();
   await knex("wallet").where("name", walletTrustD.name).del();
+  await knex("wallet").where("name", walletTrustE.name).del();
+  await knex("wallet").where("name", managingWallet.name).del();
 
   for (const wallet of wallets) {
     await knex("wallet_trust").where("actor_wallet_id", wallet).del();
@@ -241,6 +260,7 @@ module.exports = {
   walletC,
   walletTrustD,
   walletTrustE,
+  managingWallet,
   capture,
   token,
   tokenB,
