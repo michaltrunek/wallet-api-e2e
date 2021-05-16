@@ -48,22 +48,21 @@ describe("Sending tokens via managed wallet (Wallet API)",function () {
         managingWalletToken = await getSession(managingWallet, password);
     });
 
-    it.only('Managing wallet C sends from A to B with manage rights on wallet A @token @regression', async () => {
+    it('Managing wallet C sends from A to B with manage rights on wallet A @token @regression', async () => {
         const requestTrustResponse = await sendPostRequest(trustRelationshipUri, headers(managingWalletToken.token), requestTrustRelationshipPayload(walletA));
         const {body: requestTrustBody, status: requestTrustStatus} = requestTrustResponse;
-        assert.equals(requestTrustStatus, OK, 'Request trust relationship response status does not equal!', requestTrustBody);
+        assert.equals(requestTrustStatus, OK, 'Request trust relationship response status does not equal!');
+
         expect(requestTrustBody).to.have.property("state").eq('requested');
         const requestRelationshipId = requestTrustBody.id;
-        console.log(requestTrustResponse.body);
 
         const acceptTrustResponse = await sendPostRequest(acceptTrustRelationshipUri(requestRelationshipId), headers(walletAToken.token), {})
         const {body: acceptedTrustBody, status: acceptedTrustStatus} = acceptTrustResponse;
-        assert.equals(acceptedTrustStatus, OK, 'Accept trust relationship response status does not equal!', acceptedTrustBody);
+        assert.equals(acceptedTrustStatus, OK, 'Accept trust relationship response status does not equal!');
         expect(acceptedTrustBody).to.have.property("state").eq('trusted');
-        console.log(acceptTrustResponse.body);
 
-/*        const sendTokenResponse = await sendPostRequest(sendTokensUri, headers(managingWalletToken.token), payload(walletA, walletB));
-        assertSendTokensBody(sendTokenResponse, walletA, walletB);
+        const sendTokenResponse = await sendPostRequest(sendTokensUri, headers(managingWalletToken.token), payload(walletA, walletB));
+        assertSendTokensBody(sendTokenResponse, managingWallet, walletB);
         const {id} = sendTokenResponse.body;
 
         const acceptTransferResponse = await sendPostRequest(acceptTokenTransferUri(id), headers(walletBToken.token), {});
@@ -71,6 +70,6 @@ describe("Sending tokens via managed wallet (Wallet API)",function () {
 
         const limit = 50;
         const getWalletInfoResponse = await sendGetRequest(getWalletInfoUri(limit), headers(walletBToken.token));
-        await assertTokenInWallet(getWalletInfoResponse, walletB, 1);*/
+        await assertTokenInWallet(getWalletInfoResponse, walletB, 1);
     });
 });

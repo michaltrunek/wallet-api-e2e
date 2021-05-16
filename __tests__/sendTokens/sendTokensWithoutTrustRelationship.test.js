@@ -2,7 +2,7 @@ const {expect, sendGetRequest, sendPostRequest, responseStatus: {OK}, assert} = 
 const {getSession} = require("../../libs/sessionLibrary");
 const {testData} = require("../../libs/bootstrap.js");
 const {assertSendTokensBody, assertTransferCompletedBody, assertTransferDeclinedBody} = require("../../helpers/tokenActionsHelper.js");
-const {assertTokenInWallet} = require("../../helpers/walletActionsHelper.js");
+const {assertTokenInWallet, getNumberOfTokensFromWallet} = require("../../helpers/walletActionsHelper.js");
 
 let senderBearerToken, receiverBearerToken, receiverEmptyBearerToken = null;
 const apiKey = testData.apiKey;
@@ -58,6 +58,10 @@ describe("Sending tokens without trust relationship (Wallet API)", function () {
     });
 
     it('Tokens - Successful transfer of a token from A to B without trust relationship @token @regression @debug', async () => {
+        const limit = 50;
+        const initialWalletInfoResponse = await sendGetRequest(getWalletInfoUri(limit), headers(receiverBearerToken.token));
+        const initialNumberOfTokens = await getNumberOfTokensFromWallet(initialWalletInfoResponse, receiverWallet);
+
         const response = await sendPostRequest(sendTokensUri, headers(senderBearerToken.token), payload(senderWallet, receiverWallet));
         assertSendTokensBody(response, senderWallet, receiverWallet);
         const {id} = response.body;
@@ -65,9 +69,8 @@ describe("Sending tokens without trust relationship (Wallet API)", function () {
         const acceptTransferResponse = await sendPostRequest(acceptTokenTransferUri(id), headers(receiverBearerToken.token), {});
         assertTransferCompletedBody(acceptTransferResponse, senderWallet, receiverWallet);
 
-        const limit = 50;
         const getWalletInfoResponse = await sendGetRequest(getWalletInfoUri(limit), headers(receiverBearerToken.token));
-        await assertTokenInWallet(getWalletInfoResponse, receiverWallet, 1);
+        await assertTokenInWallet(getWalletInfoResponse, receiverWallet, initialNumberOfTokens + 1);
     });
 
     it('Tokens - Declined transfer of a token from A to B without trust relationship @token @regression @debug', async () => {
